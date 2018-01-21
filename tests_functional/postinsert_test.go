@@ -1,11 +1,11 @@
 package tests_functional
 
 import (
-	"ShopItemsService/utils/tests"
+	"github.com/jedi108/productTask/utils/tests"
 	"encoding/json"
 	"fmt"
 	"testing"
-	"ShopItemsService/models"
+	"github.com/jedi108/productTask/models"
 )
 
 func Test_InsertNullUrl(t *testing.T) {

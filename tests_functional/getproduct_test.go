@@ -1,7 +1,7 @@
 package tests_functional
 
 import (
-	"ShopItemsService/utils/tests"
+	"github.com/jedi108/productTask/utils/tests"
 	"testing"
 )
 

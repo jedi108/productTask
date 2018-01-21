@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"ShopItemsService/models"
+	"github.com/jedi108/productTask/models"
 )
 
 func PostProducts(resp http.ResponseWriter, req *http.Request) {
