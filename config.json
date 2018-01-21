@@ -1,0 +1,15 @@
+{
+  "database": {
+    "host": "127.0.0.1",
+    "protocol": "tcp",
+    "port": "3306",
+    "username": "root",
+    "password": "root",
+    "dbname": "ShopItems",
+    "//": "mysql database config"
+  },
+  "log": {
+    "path": ".",
+    "//": "path for log file"
+  }
+}

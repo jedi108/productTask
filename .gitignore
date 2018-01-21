@@ -1,0 +1,6 @@
+.idea
+pkg/
+#config.json
+config.tests.json
+*.log
+*.tmp
