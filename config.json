@@ -2,9 +2,9 @@
   "database": {
     "host": "127.0.0.1",
     "protocol": "tcp",
-    "port": "3306",
-    "username": "root",
-    "password": "root",
+    "port": "3307",
+    "username": "gotest",
+    "password": "gotest",
     "dbname": "ShopItems",
     "//": "mysql database config"
   },
