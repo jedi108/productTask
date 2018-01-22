@@ -4,10 +4,10 @@ import (
 	"github.com/jedi108/skylib/app"
 	"database/sql"
 	"errors"
+	"gopkg.in/guregu/null.v3/zero"
 )
 
 type Products []Product
-
 
 type Product struct {
 	Id   int64
@@ -16,19 +16,20 @@ type Product struct {
 }
 
 type Meta struct {
-	Title string `json:"title"`
-	Price string `json:"price"`
-	Image string `json:"image"`
+	Title   string    `json:"title"`
+	Price   string    `json:"price"`
+	Image   string    `json:"image"`
+	Aviable zero.Bool `json:"aviable"`
 }
 
 func GetProductById(id string) (*Product, error) {
 	product := &Product{Meta: Meta{}}
 	err := app.GetDB().QueryRow(`
 		SELECT 
-			id, url, title, price, image 
+			id, url, title, price, image, IFNULL (aviable, FALSE)
 		FROM 
 			Product 
-		WHERE id = ?`, id).Scan(&product.Id, &product.Url, &product.Meta.Title, &product.Meta.Price, &product.Meta.Image)
+		WHERE id = ?`, id).Scan(&product.Id, &product.Url, &product.Meta.Title, &product.Meta.Price, &product.Meta.Image, &product.Meta.Aviable)
 	return product, err
 }
 
