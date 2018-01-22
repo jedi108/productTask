@@ -3,9 +3,20 @@ package models
 import (
 	"github.com/jedi108/skylib/app"
 	"database/sql"
-	"errors"
 	"gopkg.in/guregu/null.v3/zero"
+	"github.com/jedi108/productTask/utils/errorsApi"
+	"errors"
 )
+
+type ContextProducts struct {
+	Products  *Products
+	ApiErrors errorsApi.ApiErrors
+	tx        *sql.Tx
+}
+
+func NewContextProduct() *ContextProducts {
+	return &ContextProducts{}
+}
 
 type Products []Product
 
@@ -33,25 +44,57 @@ func GetProductById(id string) (*Product, error) {
 	return product, err
 }
 
-func NewProducts(products *Products) ([]int64, error) {
+func (contxProd *ContextProducts) Insert(products *Products) []int64 {
+	contxProd.Products = products
 	var Ids []int64
 	tx, err := app.GetDB().Begin()
 	if err != nil {
-		return []int64{}, errors.New("Error connection")
+		contxProd.ApiErrors.Add(errorsApi.Error{Code: 500, Message: "Error connection"})
+		app.Log(err.Error())
+		return []int64{}
 	}
-	for _, product := range *products {
-		Id, err := product.Insert(tx)
+	contxProd.tx = tx
+	for _, product := range *contxProd.Products {
+		Id, err := contxProd.InsertProduct(&product)
 		Ids = append(Ids, Id)
 		if err != nil {
 			tx.Rollback()
-			return Ids, err
+			app.Log(err.Error())
+			contxProd.ApiErrors.Add(errorsApi.Error{Code: 500, Message: "Error server data"})
+			return Ids
 		}
 	}
 	err = tx.Commit()
-	return Ids, err
+	return Ids
 }
 
-func (product *Product) Insert(tx *sql.Tx) (int64, error) {
+func (contxProd *ContextProducts) ProductValidate(product *Product) {
+	if product.Url == "" {
+		contxProd.ApiErrors.Add(errorsApi.Error{Code: 422, Field: "Url", Message: "is empty"})
+	}
+	if product.Meta.Title == "" {
+		contxProd.ApiErrors.Add(errorsApi.Error{Code: 422, Field: "Meta.Title", Message: "is empty"})
+	}
+	if product.Meta.Image == "" {
+		contxProd.ApiErrors.Add(errorsApi.Error{Code: 422, Field: "Meta.Image", Message: "is empty"})
+	}
+	if product.Meta.Price == "" {
+		contxProd.ApiErrors.Add(errorsApi.Error{Code: 422, Field: "Meta.Price", Message: "is empty"})
+	}
+}
+
+func (contxProd *ContextProducts) HasError() bool {
+	if len(contxProd.ApiErrors.Errors) > 0 {
+		return true
+	}
+	return false
+}
+
+func (contxProd *ContextProducts) InsertProduct(product *Product) (int64, error) {
+	contxProd.ProductValidate(product)
+	if contxProd.HasError() {
+		return 0, errors.New("Validate error")
+	}
 	result, err := app.GetDB().Exec(`
 		INSERT INTO
 			Product (

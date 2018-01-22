@@ -10,8 +10,9 @@ import (
 
 func Test_InsertNullUrl(t *testing.T) {
 	TestItem := &models.Product{
+		//Url:"__",
 		Meta: models.Meta{
-			Title: "Product1",
+			//Title: "Product44",
 			Image: "/src/image.jpg",
 			Price: "80",
 		},
@@ -24,15 +25,16 @@ func Test_InsertNullUrl(t *testing.T) {
 	}
 	req := tests.SendRequest("GET", GetUrlTest()+"/v1/PostProduct", []byte(jsonItem))
 	fmt.Println(req.Body)
+	//t.Fatal(req.Body)
 }
 
 func Test_InsertItemCorrect(t *testing.T) {
 	TestItem := &models.Product{
 		Url: "sd",
 		Meta: models.Meta{
-			Title: "Product1",
-			Image: "/src/image.jpg",
-			Price: "80",
+			Title: "Product24",
+			Image: "/source/ssimage.jpg",
+			Price: "800",
 		},
 	}
 
