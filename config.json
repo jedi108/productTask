@@ -1,8 +1,8 @@
 {
   "database": {
-    "host": "127.0.0.1",
+    "host": "db",
     "protocol": "tcp",
-    "port": "3307",
+    "port": "3306",
     "username": "gotest",
     "password": "gotest",
     "dbname": "ShopItems",
