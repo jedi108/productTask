@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ShopItemsService/controllers"
+	"github.com/jedi108/productTask/controllers"
 	"fmt"
 	"net/http"
 	"github.com/jedi108/skylib/app"
